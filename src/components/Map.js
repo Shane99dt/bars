@@ -1,12 +1,13 @@
 import { MapContext } from "../contexts/Map"
-import { useContext } from "react"
+import { useContext, useEffect, useRef } from "react"
 
 
 import * as L from "leaflet"
 import 'leaflet/dist/leaflet.css'
 import { Icon } from 'leaflet'
-import { MapContainer, TileLayer, Marker, Circle, Tooltip } from "react-leaflet"
+import { MapContainer, TileLayer, Marker, Circle, Tooltip, useMap } from "react-leaflet"
 import BarMarkerPopup from "./BarMarkerPopup"
+import MapContent from "./MapContent"
 
 const markerIcon = new Icon({
   iconUrl: 'https://unpkg.com/leaflet@1.9.2/dist/images/marker-icon-2x.png',
@@ -24,8 +25,17 @@ const greenIcon = new LeafIcon({
 });
 
 
+
+
+
 const Map = () => {
-  const { location, bars } = useContext(MapContext)
+  // const titleRef = useRef()
+
+  // const handleChangeHover = () => {
+  //   titleRef.scrollIntoView({ behavior: 'smooth' })
+  // }
+  const { location, bars, setSelectedBar, selectedBar } = useContext(MapContext)
+  
 
   if(!location){
     return <div>Loading...</div>
@@ -34,6 +44,8 @@ const Map = () => {
   return(
     <>
       <MapContainer center={[location.lat, location.lng]} zoom={15} scrollWheelZoom={true} >
+        <MapContent>
+
         <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' />
         <Circle center={[location.lat, location.lng]} radius={300} />
@@ -42,15 +54,17 @@ const Map = () => {
             You're Here
           </Tooltip>
         </Marker>
-        {bars.map((bar, i) => {
+        {bars.map((bar) => {
           return(
-            <Marker key={i} position={[bar.latitude, bar.longitude]} icon={greenIcon}>
+            <Marker key={bar.id} position={[bar.latitude, bar.longitude]} icon={greenIcon} eventHandlers={{mouseover:() => {setSelectedBar(bar)}}} >
               <Tooltip>
                 <BarMarkerPopup name={bar.name} address={bar.address} price={bar.price}/>
               </Tooltip>
             </Marker>
           )
         })}
+        </MapContent>
+
       </MapContainer>
     </>
   )

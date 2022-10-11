@@ -23,6 +23,10 @@
   background: #555;
 }
 
+.selected {
+  background-color: teal;
+}
+
 .h1 {
   font-weight: 600;
   color: black;

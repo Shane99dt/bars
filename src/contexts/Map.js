@@ -6,6 +6,7 @@ const MapContext = createContext({})
 const MapContextProvidor = ({children}) => {
   const [ location, setLocation ] = useState(null)
   const [ bars, setBars ] = useState(barsTable)
+  const [ selectedBar, setSelectedBar ] = useState(null)
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
@@ -24,6 +25,8 @@ const MapContextProvidor = ({children}) => {
   const value = {
     location,
     bars,
+    selectedBar,
+    setSelectedBar
   }
 
   return (
